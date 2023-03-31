@@ -15,7 +15,7 @@ func GenerateAuthzMsgs(address sdk.AccAddress, granteeAddr sdk.AccAddress) (*aut
 
 	msgGrant, _ := authztypes.NewMsgGrant(address, granteeAddr, authorization, expiry)
 	msgRevoke := authztypes.NewMsgRevoke(address, granteeAddr, typeUrl)
-	msgExec := authztypes.NewMsgExec(granteeAddr, []sdk.Msg{msgSend})
+	msgExec := authztypes.NewMsgExec(address, []sdk.Msg{msgSend})
 
 	return msgGrant, &msgRevoke, &msgExec
 }

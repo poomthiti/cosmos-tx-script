@@ -10,17 +10,17 @@ import (
 )
 
 type Msgs struct {
-	MsgSubmitProposal     *govtypes.MsgSubmitProposal
-	MsgCreateValidator    *stakingtypes.MsgCreateValidator
-	MsgEditValidator      *stakingtypes.MsgEditValidator
-	MsgDelegate           *stakingtypes.MsgDelegate
-	MsgSetWithdrawAddress *distributiontypes.MsgSetWithdrawAddress
-	MsgGrant              *authztypes.MsgGrant
-	MsgExec               *authztypes.MsgExec
-	MsgRevoke             *authztypes.MsgRevoke
-	MsgSend               *banktypes.MsgSend
-	MsgMultiSend          *banktypes.MsgMultiSend
-	MsgFundCommunityPool  *distributiontypes.MsgFundCommunityPool
+	// MsgSubmitProposal     *govtypes.MsgSubmitProposal
+	// MsgCreateValidator    *stakingtypes.MsgCreateValidator
+	// MsgEditValidator      *stakingtypes.MsgEditValidator
+	// MsgDelegate           *stakingtypes.MsgDelegate
+	// MsgSetWithdrawAddress *distributiontypes.MsgSetWithdrawAddress
+	MsgGrant             *authztypes.MsgGrant
+	MsgExec              *authztypes.MsgExec
+	MsgRevoke            *authztypes.MsgRevoke
+	MsgSend              *banktypes.MsgSend
+	MsgMultiSend         *banktypes.MsgMultiSend
+	MsgFundCommunityPool *distributiontypes.MsgFundCommunityPool
 	// MsgVerifyInvariant             *crisistypes.MsgVerifyInvariant
 	// MsgWithdrawValidatorCommission *distributiontypes.MsgWithdrawValidatorCommission
 	// MsgSubmitEvidence              *evidencetypes.MsgSubmitEvidence

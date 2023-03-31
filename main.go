@@ -56,7 +56,6 @@ func sendTx() {
 	println("Account:", key.GetAddress().String())
 
 	address := key.GetAddress()
-	key.GetPubKey()
 
 	// Create client
 	clientNode, err := client.NewClientFromNode(RPC_PATH)
@@ -85,7 +84,6 @@ func sendTx() {
 		panic(err)
 	}
 	granteeAddr, _ := sdk.AccAddressFromBech32("osmo1wke7j8f5kgnnacs3avchcj6fvvdtvrsalzmddx")
-	grantee, err := accountRetriever.GetAccount(clientCtx, granteeAddr)
 	if err != nil {
 		panic(err)
 	}
@@ -102,18 +100,6 @@ func sendTx() {
 		WithMemo("").
 		WithSignMode(signing.SignMode_SIGN_MODE_DIRECT)
 
-	granteeTxf := tx.Factory{}.
-		WithKeybase(kb).
-		WithTxConfig(app.MakeEncodingConfig().TxConfig).
-		WithAccountRetriever(clientCtx.AccountRetriever).
-		WithAccountNumber(grantee.GetAccountNumber()).
-		WithSequence(grantee.GetSequence()).
-		WithGasPrices(GAS_PRICES).
-		WithGasAdjustment(2).
-		WithChainID(CHAIN_ID).
-		WithMemo("").
-		WithSignMode(signing.SignMode_SIGN_MODE_DIRECT)
-
 	// authz (3)
 	msgGrant, msgRevoke, msgExec := modules.GenerateAuthzMsgs(address, granteeAddr)
 	// bank (2)
@@ -121,30 +107,30 @@ func sendTx() {
 	// crisis (1)
 	// msgVerifyInvariant := modules.GenerateCrisisMsgs(address)
 	// distribution (4)
-	msgSetWithdrawAddress, msgWithdrawDelegatorReward, _, msgFundCommunityPool := modules.GenerateDistributionMsgs(address)
+	_, msgWithdrawDelegatorReward, _, msgFundCommunityPool := modules.GenerateDistributionMsgs(address)
 	// evidence (1)
 	// msgSubmitEvidence := modules.GenerateEvidenceMsgs(address)
 	// feegrant (2)
 	// msgGrantAllowance, msgRevokeAllowance := modules.GenerateFeeGrantMsgs(address, granteeAddr)
 	// gov (4)
-	msgSubmitProposal, msgVote, msgVoteWeighted, msgDeposit := modules.GenerateGovMsgs(address)
+	_, msgVote, msgVoteWeighted, msgDeposit := modules.GenerateGovMsgs(address)
 	// slashing (1)
 	msgUnjail := modules.GenerateSlashingMsgs()
 	// staking (5)
-	msgCreateValidator, msgEditValidator, msgDelegate, msgBeginRedelegate, msgUndelegate := modules.GenerateStakingMsgs(address)
+	_, _, _, msgBeginRedelegate, msgUndelegate := modules.GenerateStakingMsgs(address)
 
 	msgs := modules.Msgs{
-		MsgSubmitProposal:     msgSubmitProposal,
-		MsgCreateValidator:    msgCreateValidator,
-		MsgEditValidator:      msgEditValidator,
-		MsgDelegate:           msgDelegate,
-		MsgSetWithdrawAddress: msgSetWithdrawAddress,
-		MsgGrant:              msgGrant,
-		MsgExec:               msgExec,
-		MsgRevoke:             msgRevoke,
-		MsgSend:               msgSend,
-		MsgMultiSend:          msgMultiSend,
-		MsgFundCommunityPool:  msgFundCommunityPool,
+		// MsgSubmitProposal:     msgSubmitProposal,
+		// MsgCreateValidator:    msgCreateValidator,
+		// MsgEditValidator:      msgEditValidator,
+		// MsgDelegate:           msgDelegate,
+		// MsgSetWithdrawAddress: msgSetWithdrawAddress,
+		MsgGrant:             msgGrant,
+		MsgExec:              msgExec,
+		MsgRevoke:            msgRevoke,
+		MsgSend:              msgSend,
+		MsgMultiSend:         msgMultiSend,
+		MsgFundCommunityPool: msgFundCommunityPool,
 		// ------------Not possible-----------------
 		// MsgVerifyInvariant:         msgVerifyInvariant,
 		// ------------Not possible-----------------
@@ -205,19 +191,12 @@ func sendTx() {
 			msg = values.Field(i).Interface().(sdk.Msg)
 		}
 
-		if msgName == "MsgExec" {
-			txf = txf.WithSequence(grantee.GetSequence())
-		} else {
-			txf = txf.WithSequence(sequence)
-			sequence += 1
-		}
-		_, simGasUsed, err := tx.CalculateGas(clientCtx.GRPCClient, txf, msg)
+		_, simGasUsed, err := tx.CalculateGas(clientCtx.GRPCClient, txf.WithSequence(sequence), msg)
 		if err != nil {
 			panic(err)
 		}
-		fmt.Printf("SIM GAS USED: %s\n", strconv.FormatUint(simGasUsed, 10))
 
-		txf = txf.WithGas(simGasUsed)
+		txf = txf.WithGas(simGasUsed).WithSequence(sequence)
 
 		txb, err := tx.BuildUnsignedTx(txf, msg)
 		if err != nil {
@@ -243,7 +222,8 @@ func sendTx() {
 			proposalId = utils.FindAttrValue(res.Logs[0].GetEvents(), "submit_proposal", "proposal_id")
 		}
 
-		fmt.Printf("[SUCCESS]Tx broadcast successful. Height: %d, TxHash: %s\n", res.Height, res.TxHash)
+		sequence += 1
+		fmt.Printf("[SUCCESS]Tx broadcast successful. Height: %d, RawLog: %s,TxHash: %s\n", res.Height, res.RawLog, res.TxHash)
 		println("---------------------------------------------------------------------------------------------------------------------------------")
 	}
 
@@ -357,7 +337,7 @@ func sendTx() {
 			panic(err)
 		}
 
-		fmt.Printf("[FAILED] Tx broadcast successful. Height: %d, Rawlog: %s,TxHash: %s\n", res.Height, res.RawLog, res.TxHash)
+		fmt.Printf("[FAILED] Tx broadcast successful. Height: %d, RawLog: %s,TxHash: %s\n", res.Height, res.RawLog, res.TxHash)
 		println("---------------------------------------------------------------------------------------------------------------------------------")
 		sequence += 1
 	}
