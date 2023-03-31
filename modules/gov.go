@@ -15,7 +15,7 @@ func GenerateGovMsgs(address sdk.AccAddress) (*govtypes.MsgSubmitProposal, *govt
 			address,
 			1,
 			govtypes.WeightedVoteOptions{
-				govtypes.WeightedVoteOption{Option: govtypes.OptionYes, Weight: sdk.NewDec(70)},
-				govtypes.WeightedVoteOption{Option: govtypes.OptionAbstain, Weight: sdk.NewDec(30)}}),
+				govtypes.WeightedVoteOption{Option: govtypes.OptionYes, Weight: sdk.NewDecWithPrec(70, 2)},
+				govtypes.WeightedVoteOption{Option: govtypes.OptionAbstain, Weight: sdk.NewDecWithPrec(30, 2)}}),
 		govtypes.NewMsgDeposit(address, 1, sdk.NewCoins(sdk.NewCoin("uosmo", sdk.NewInt(100))))
 }

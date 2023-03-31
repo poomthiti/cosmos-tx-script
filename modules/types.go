@@ -22,15 +22,15 @@ type Msgs struct {
 	MsgMultiSend          *banktypes.MsgMultiSend
 	MsgFundCommunityPool  *distributiontypes.MsgFundCommunityPool
 	// MsgVerifyInvariant             *crisistypes.MsgVerifyInvariant
+	// MsgWithdrawValidatorCommission *distributiontypes.MsgWithdrawValidatorCommission
 	// MsgSubmitEvidence              *evidencetypes.MsgSubmitEvidence
 	// MsgGrantAllowance              *feegranttypes.MsgGrantAllowance
 	// MsgRevokeAllowance             *feegranttypes.MsgRevokeAllowance
-	MsgVote                        *govtypes.MsgVote
-	MsgVoteWeighted                *govtypes.MsgVoteWeighted
-	MsgDeposit                     *govtypes.MsgDeposit
-	MsgUnjail                      *slashingtypes.MsgUnjail
-	MsgWithdrawValidatorCommission *distributiontypes.MsgWithdrawValidatorCommission
-	MsgWithdrawDelegatorReward     *distributiontypes.MsgWithdrawDelegatorReward
-	MsgBeginRedelegate             *stakingtypes.MsgBeginRedelegate
-	MsgUndelegate                  *stakingtypes.MsgUndelegate
+	MsgVote                    *govtypes.MsgVote
+	MsgVoteWeighted            *govtypes.MsgVoteWeighted
+	MsgDeposit                 *govtypes.MsgDeposit
+	MsgUnjail                  *slashingtypes.MsgUnjail
+	MsgWithdrawDelegatorReward *distributiontypes.MsgWithdrawDelegatorReward
+	MsgBeginRedelegate         *stakingtypes.MsgBeginRedelegate
+	MsgUndelegate              *stakingtypes.MsgUndelegate
 }

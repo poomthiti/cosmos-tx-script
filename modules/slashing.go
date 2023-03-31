@@ -6,7 +6,7 @@ import (
 )
 
 func GenerateSlashingMsgs() *slashingtypes.MsgUnjail {
-	valAddress, _ := sdk.ValAddressFromBech32("osmovaloper1l0ta4rw7zauqplzhsvcsgxveuqptauf6e4eg7a")
+	valAddress, _ := sdk.ValAddressFromBech32("osmovaloper1acqpnvg2t4wmqfdv8hq47d3petfksjs5ejrkrx")
 	msgUnjail := slashingtypes.NewMsgUnjail(valAddress)
 	return msgUnjail
 }
