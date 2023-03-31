@@ -107,30 +107,31 @@ func sendTx() {
 	// crisis (1)
 	// msgVerifyInvariant := modules.GenerateCrisisMsgs(address)
 	// distribution (4)
-	_, msgWithdrawDelegatorReward, _, msgFundCommunityPool := modules.GenerateDistributionMsgs(address)
+	msgSetWithdrawAddress, msgWithdrawDelegatorReward, _, msgFundCommunityPool := modules.GenerateDistributionMsgs(address)
 	// evidence (1)
 	// msgSubmitEvidence := modules.GenerateEvidenceMsgs(address)
 	// feegrant (2)
 	// msgGrantAllowance, msgRevokeAllowance := modules.GenerateFeeGrantMsgs(address, granteeAddr)
 	// gov (4)
-	_, msgVote, msgVoteWeighted, msgDeposit := modules.GenerateGovMsgs(address)
+	msgSubmitProposal, msgVote, msgVoteWeighted, msgDeposit := modules.GenerateGovMsgs(address)
 	// slashing (1)
 	msgUnjail := modules.GenerateSlashingMsgs()
 	// staking (5)
-	_, _, _, msgBeginRedelegate, msgUndelegate := modules.GenerateStakingMsgs(address)
+	msgCreateValidator, msgEditValidator, msgDelegate, msgBeginRedelegate, msgUndelegate := modules.GenerateStakingMsgs(address)
 
 	msgs := modules.Msgs{
-		// MsgSubmitProposal:     msgSubmitProposal,
-		// MsgCreateValidator:    msgCreateValidator,
-		// MsgEditValidator:      msgEditValidator,
-		// MsgDelegate:           msgDelegate,
-		// MsgSetWithdrawAddress: msgSetWithdrawAddress,
-		MsgGrant:             msgGrant,
-		MsgExec:              msgExec,
-		MsgRevoke:            msgRevoke,
-		MsgSend:              msgSend,
-		MsgMultiSend:         msgMultiSend,
-		MsgFundCommunityPool: msgFundCommunityPool,
+		// ------Submitting proposal costs a lot-------
+		MsgSubmitProposal:     msgSubmitProposal,
+		MsgCreateValidator:    msgCreateValidator,
+		MsgEditValidator:      msgEditValidator,
+		MsgDelegate:           msgDelegate,
+		MsgSetWithdrawAddress: msgSetWithdrawAddress,
+		MsgGrant:              msgGrant,
+		MsgExec:               msgExec,
+		MsgRevoke:             msgRevoke,
+		MsgSend:               msgSend,
+		MsgMultiSend:          msgMultiSend,
+		MsgFundCommunityPool:  msgFundCommunityPool,
 		// ------------Not possible-----------------
 		// MsgVerifyInvariant:         msgVerifyInvariant,
 		// ------------Not possible-----------------
@@ -140,7 +141,6 @@ func sendTx() {
 		// ------x/feegrant is not registered in Osmosis chain-------
 		// MsgGrantAllowance:  msgGrantAllowance,
 		// MsgRevokeAllowance: msgRevokeAllowance,
-		// ------Entering proposal voting period costs a lot-------
 		MsgVote:                    msgVote,
 		MsgVoteWeighted:            msgVoteWeighted,
 		MsgDeposit:                 msgDeposit,
